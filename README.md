@@ -8,5 +8,5 @@ Python program to parse monthly PGE data for personal use. Outputs rates for abs
 
 ## Notes: 
 * Outputted data is customized for my personal use. Other relevant data can be manipulated fairly easily. Examples of outputs can be found in /Examples/. 
-* Change [this line](https://github.com/neilkatahira/pge-csvparser/blob/master/CSV%20Parser/pgeparser.py#L88) accordingly for general monthly usage.
+* Change commented line in overchargeParser() accordingly for general monthly usage.
 * Remove overcharge calculation and update equations to calculate rates for AC/Heater usage fairly.
