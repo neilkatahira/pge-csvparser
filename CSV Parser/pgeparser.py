@@ -111,24 +111,24 @@ csvfiles = glob.glob('*.csv')
 
 for files in csvfiles:
     with open(files, 'r', encoding='utf-8-sig') as csvfile, open("pgeoutput_%s.txt" % (os.path.splitext(files)[0]), 'w') as output:
-            print("Parsing %s...\n" % (files))
-            output.write("Parsing %s...\n\n" % (files))
-            
-            dayCosts = {}
-            customerDetails(csvfile, output)
-            scaledAvgCost, totalCost = costParser(csvfile, output, dayCosts)
-            overcharge = overchargeParser(dayCosts, output, scaledAvgCost)
-            ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge,
-                                                                  absentees, present, absenteepct)
-            # fix rounding errors
-            presentCharge += totalCost - absenteeCharge * absentees - presentCharge * (present - 1) - ocFinal
-            
-            print("\nTotal: $%.2f" % (totalCost))
-            print("Absentee Charge for %d absentees paying %.2f%%: $%.2f" % (absentees, absenteepct * 100, absenteeCharge))
-            print("Present Charge for %d present: $%.2f" % (present, presentCharge))
-            print("Present with Overcharge: $%.2f" % (ocFinal))
-            print("\nSession exported to pgeoutput_%s.txt" % (os.path.splitext(files))[0])
-            output.write("\nTotal: $%.2f\n" % (totalCost))
-            output.write("Absentee Charge for %d absentees paying %.2f%%: $%.2f\n" % (absentees, absenteepct * 100, absenteeCharge))
-            output.write("Present Charge for %d present: $%.2f\n" % (present, presentCharge))
-            output.write("Present with Overcharge: $%.2f\n" % (ocFinal))
+        print("Parsing %s...\n" % (files))
+        output.write("Parsing %s...\n\n" % (files))
+
+        dayCosts = {}
+        customerDetails(csvfile, output)
+        scaledAvgCost, totalCost = costParser(csvfile, output, dayCosts)
+        overcharge = overchargeParser(dayCosts, output, scaledAvgCost)
+        ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge,
+                                                              absentees, present, absenteepct)
+        # fix rounding errors
+        presentCharge += totalCost - absenteeCharge * absentees - presentCharge * (present - 1) - ocFinal
+        
+        print("\nTotal: $%.2f" % (totalCost))
+        print("Absentee Charge for %d absentees paying %.2f%%: $%.2f" % (absentees, absenteepct * 100, absenteeCharge))
+        print("Present Charge for %d present: $%.2f" % (present, presentCharge))
+        print("Present with Overcharge: $%.2f" % (ocFinal))
+        print("\nSession exported to pgeoutput_%s.txt" % (os.path.splitext(files))[0])
+        output.write("\nTotal: $%.2f\n" % (totalCost))
+        output.write("Absentee Charge for %d absentees paying %.2f%%: $%.2f\n" % (absentees, absenteepct * 100, absenteeCharge))
+        output.write("Present Charge for %d present: $%.2f\n" % (present, presentCharge))
+        output.write("Present with Overcharge: $%.2f\n" % (ocFinal))
