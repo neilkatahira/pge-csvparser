@@ -69,12 +69,13 @@ def costParser(csvfile, output, dayCosts):
                 days += 1
                 majorityMonthCost += currentCost
             currentCost = currentUnits = currentUsage = extPay = 0.0
-            
+
+    avg = majorityMonthCost / days
     print("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f"
-          % (totalCost, totalUsage, units, majorityMonthCost / days))
+          % (totalCost, totalUsage, units, avg))
     output.write("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f\n"
-                 % (totalCost, totalUsage, units, majorityMonthCost / days))
-    return majorityMonthCost / days, totalCost
+                 % (totalCost, totalUsage, units, avg))
+    return avg, totalCost
 
 # Calculate overcharge based on average for A/C usage
 def overchargeParser(dayCosts, output, avgCost):
@@ -114,8 +115,8 @@ for files in csvfiles:
 
         dayCosts = {}
         customerDetails(csvfile, output)
-        scaledAvgCost, totalCost = costParser(csvfile, output, dayCosts)
-        overcharge = overchargeParser(dayCosts, output, scaledAvgCost)
+        AvgCost, totalCost = costParser(csvfile, output, dayCosts)
+        overcharge = overchargeParser(dayCosts, output, AvgCost)
         ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge,
                                                               absentees, present, absenteepct)
         # fix rounding errors
