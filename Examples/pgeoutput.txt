@@ -40,6 +40,7 @@ Date: 2020-06-27, Daily Usage: 0.00kWh, Daily Cost: $0.00
 Date: 2020-06-28, Daily Usage: 0.00kWh, Daily Cost: $0.00
 Date: 2020-06-29, Daily Usage: 0.00kWh, Daily Cost: $0.00
 Total Cost: $273.53, Total Usage: 973.16kWh, Avg Cost/day: $7.39
+
 Overcharges:
 2020-06-22: Overcharge: $6.47
 2020-06-23: Overcharge: $3.31
