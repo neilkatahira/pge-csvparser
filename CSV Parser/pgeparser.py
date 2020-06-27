@@ -1,6 +1,4 @@
-import csv
-import glob
-import os
+import csv, glob, os
 
 # Checks input for a positive integer
 def personInputChecker(msg):
