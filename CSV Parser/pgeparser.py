@@ -58,8 +58,7 @@ def costParser(csvfile, output, dayCosts):
                   (currentDate, currentUsage, units, currentCost))
             output.write("Date: %s, Daily Usage: %.2f%s, Daily Cost: $%.2f\n"  %
                   (currentDate, currentUsage, units, currentCost))
-            dayCosts[currentDate] = dict({'Usage': currentUsage,
-                                          'Cost': currentCost, 'Units': units})
+            dayCosts[currentDate] = dict({'Usage': currentUsage, 'Cost': currentCost, 'Units': units})
             # start day count at beginning of month
             if currentDate.split('-')[2] == "01": 
                 majorityMonthEnable = True
@@ -117,8 +116,7 @@ for files in csvfiles:
         customerDetails(csvfile, output)
         AvgCost, totalCost = costParser(csvfile, output, dayCosts)
         overcharge = overchargeParser(dayCosts, output, AvgCost)
-        ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge,
-                                                              absentees, present, absenteepct)
+        ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge, absentees, present, absenteepct)
         # fix rounding errors
         presentCharge += totalCost - absenteeCharge * absentees - presentCharge * (present - 1) - ocFinal
         
@@ -131,3 +129,5 @@ for files in csvfiles:
         output.write("Absentee Charge for %d absentees paying %.2f%%: $%.2f\n" % (absentees, absenteepct * 100, absenteeCharge))
         output.write("Present Charge for %d present: $%.2f\n" % (present, presentCharge))
         output.write("Present with Overcharge: $%.2f\n" % (ocFinal))
+        
+r = input("Press enter to exit...\n")
