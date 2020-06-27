@@ -39,21 +39,15 @@ Date: 2020-06-26, Daily Usage: 0.00kWh, Daily Cost: $0.00
 Date: 2020-06-27, Daily Usage: 0.00kWh, Daily Cost: $0.00
 Date: 2020-06-28, Daily Usage: 0.00kWh, Daily Cost: $0.00
 Date: 2020-06-29, Daily Usage: 0.00kWh, Daily Cost: $0.00
-Total Cost: $273.53, Total Usage: 973.16kWh, Avg Cost/day: $7.39, Scaled Avg: $5.72
-
+Total Cost: $273.53, Total Usage: 973.16kWh, Avg Cost/day: $7.39
 Overcharges:
-2020-06-13: Overcharge: $1.27
-2020-06-14: Overcharge: $0.68
-2020-06-18: Overcharge: $0.39
-2020-06-19: Overcharge: $0.30
-2020-06-21: Overcharge: $1.25
-2020-06-22: Overcharge: $8.14
-2020-06-23: Overcharge: $4.98
-2020-06-24: Overcharge: $4.15
-2020-06-25: Overcharge: $4.70
-Total Overcharge: $25.88
+2020-06-22: Overcharge: $6.47
+2020-06-23: Overcharge: $3.31
+2020-06-24: Overcharge: $2.48
+2020-06-25: Overcharge: $3.03
+Total Overcharge: $15.31
 
 Total: $273.53
-Absentee Charge for 3 absentees paying 10.00%: $24.76
-Present Charge for 3 present: $57.78
-Present with Overcharge: $83.67
+Absentee Charge for 3 absentees paying 10.00%: $25.82
+Present Charge for 3 present: $60.25
+Present with Overcharge: $75.56

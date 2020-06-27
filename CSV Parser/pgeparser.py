@@ -38,7 +38,6 @@ def costParser(csvfile, output, dayCosts):
     currentDate = units = ""
     totalCost = totalUsage = currentCost = currentUsage = majorityMonthCost = 0.0
     days = 0
-    scalingFactor = 0.24 / 0.31 # tier 1 to tier 2 PGE electric difference
     majorityMonthEnable = False
 
     print("\nDaily Breakdown:")
@@ -72,13 +71,11 @@ def costParser(csvfile, output, dayCosts):
                 majorityMonthCost += currentCost
             currentCost = currentUnits = currentUsage = extPay = 0.0
             
-    print("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f,"
-          " Scaled Avg: $%.2f" % (totalCost, totalUsage, units,
-          majorityMonthCost / days, majorityMonthCost * scalingFactor / days))
-    output.write("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f,"
-          " Scaled Avg: $%.2f\n" % (totalCost, totalUsage, units,
-          majorityMonthCost / days, majorityMonthCost * scalingFactor / days))
-    return majorityMonthCost * scalingFactor / days, totalCost
+    print("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f"
+          % (totalCost, totalUsage, units, majorityMonthCost / days))
+    output.write("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f"
+                 % (totalCost, totalUsage, units, majorityMonthCost / days))
+    return majorityMonthCost / days, totalCost
 
 # Calculate overcharge based on average for A/C usage
 def overchargeParser(dayCosts, output, avgCost):
