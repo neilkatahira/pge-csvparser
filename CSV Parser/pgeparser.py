@@ -1,5 +1,6 @@
 import csv
 import glob
+import os
 
 # Checks input for a positive integer
 def personInputChecker(msg):
@@ -109,7 +110,7 @@ absenteepct = pctInputChecker("Percentage of bill each absentee pays (6 people p
 csvfiles = glob.glob('*.csv')
 
 for files in csvfiles:
-    with open(files, 'r', encoding='utf-8-sig') as csvfile, open("pgeoutput.txt", 'w') as output:
+    with open(files, 'r', encoding='utf-8-sig') as csvfile, open("pgeoutput_%s.txt" % (os.path.splitext(files)[0]), 'w') as output:
             print("Parsing %s...\n" % (files))
             output.write("Parsing %s...\n\n" % (files))
             
@@ -126,7 +127,7 @@ for files in csvfiles:
             print("Absentee Charge for %d absentees paying %.2f%%: $%.2f" % (absentees, absenteepct * 100, absenteeCharge))
             print("Present Charge for %d present: $%.2f" % (present, presentCharge))
             print("Present with Overcharge: $%.2f" % (ocFinal))
-            print("\nSession exported to pgeoutput.txt")
+            print("\nSession exported to pgeoutput_%s.txt" % (os.path.splitext(files))[0])
             output.write("\nTotal: $%.2f\n" % (totalCost))
             output.write("Absentee Charge for %d absentees paying %.2f%%: $%.2f\n" % (absentees, absenteepct * 100, absenteeCharge))
             output.write("Present Charge for %d present: $%.2f\n" % (present, presentCharge))
