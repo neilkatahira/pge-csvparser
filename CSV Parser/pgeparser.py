@@ -89,7 +89,7 @@ def overchargeParser(dayCosts, output, avgCost):
                 print("%s: Overcharge: $%.2f" % (days, dayCosts[days]['Cost'] - avgCost))
                 output.write("%s: Overcharge: $%.2f\n" % (days, dayCosts[days]['Cost'] - avgCost))
     print("Total Overcharge: $%.2f" % (totalOvercharge))
-    output.write("Total Overcharge: $%.2f" % (totalOvercharge))
+    output.write("Total Overcharge: $%.2f\n" % (totalOvercharge))
     return totalOvercharge
 
 def finalCharges(totalCost, overcharge, absentees, present, absenteepct):
@@ -117,11 +117,11 @@ for files in csvfiles:
                                                                   absentees, present, absenteepct)
             presentCharge += totalCost - absenteeCharge * absentees - presentCharge * (present - 1) - ocFinal # fix rounding errors
             print("\nTotal: $%.2f" % (totalCost))
-            print("Absentee Charge: $%.2f" % (absenteeCharge))
-            print("Present Charge: $%.2f" % (presentCharge))
+            print("Absentee Charge for %d absentees paying %.2f%%: $%.2f" % (absentees, absenteepct * 100, absenteeCharge))
+            print("Present Charge for %d present: $%.2f" % (present, presentCharge))
             print("Present with Overcharge: $%.2f" % (ocFinal))
             output.write("\nTotal: $%.2f\n" % (totalCost))
-            output.write("Absentee Charge: $%.2f\n" % (absenteeCharge))
-            output.write("Present Charge: $%.2f\n" % (presentCharge))
+            output.write("Absentee Charge for %d absentees paying %.2f%%: $%.2f\n" % (absentees, absenteepct * 100, absenteeCharge))
+            output.write("Present Charge for %d present: $%.2f\n" % (present, presentCharge))
             output.write("Present with Overcharge: $%.2f\n" % (ocFinal))
             print("\nSession exported to pgeoutput.txt")
