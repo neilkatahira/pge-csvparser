@@ -1,6 +1,7 @@
 import csv
 import glob
 
+# Checks input for a positive integer
 def personInputChecker(msg):
     boolpos = False
     while not boolpos:
@@ -11,6 +12,7 @@ def personInputChecker(msg):
             print("Enter a valid positive integer")
     return val
 
+# Checks input for percentage number between 0 and 1
 def pctInputChecker(msg):
     validPct = False
     while not validPct:
@@ -21,6 +23,7 @@ def pctInputChecker(msg):
             print("Enter a valid percentage between 0 and 1")
     return val
 
+# Print first 4 lines of csv file as customer details
 def customerDetails(csvfile, output):
     custDetails = csv.reader(csvfile)
     for i in range(4):
@@ -29,6 +32,7 @@ def customerDetails(csvfile, output):
         output.write("%s: %s\n" % (custLine[0], custLine[1]))
     next(csvfile) # skip line between customer details and costs
 
+# Parse csv file tallying daily and total costs
 def costParser(csvfile, output, dayCosts):
     costs = csv.DictReader(csvfile)
     currentDate = units = ""
@@ -67,6 +71,7 @@ def costParser(csvfile, output, dayCosts):
                 days += 1
                 majorityMonthCost += currentCost
             currentCost = currentUnits = currentUsage = extPay = 0.0
+            
     print("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f,"
           " Scaled Avg: $%.2f" % (totalCost, totalUsage, units,
           majorityMonthCost / days, majorityMonthCost * scalingFactor / days))
@@ -75,13 +80,14 @@ def costParser(csvfile, output, dayCosts):
           majorityMonthCost / days, majorityMonthCost * scalingFactor / days))
     return majorityMonthCost * scalingFactor / days, totalCost
 
+# Calculate overcharge based on average for A/C usage
 def overchargeParser(dayCosts, output, avgCost):
     print("\nOvercharges:")
     output.write("\nOvercharges:\n")
     totalOvercharge = 0.0
     majorityMonthEnable = False
     for days in dayCosts:
-        if days.split('-')[2] == "13": #general hard code for after finals
+        if days.split('-')[2] == "13": #general hard code for after finals, set to 01 otherwise
             majorityMonthEnable = True
         if majorityMonthEnable:
             if dayCosts[days]['Cost'] > avgCost:
@@ -92,8 +98,8 @@ def overchargeParser(dayCosts, output, avgCost):
     output.write("Total Overcharge: $%.2f\n" % (totalOvercharge))
     return totalOvercharge
 
+# Calculate final payments
 def finalCharges(totalCost, overcharge, absentees, present, absenteepct):
-    #Present pays leftover percentage disregarding overcharge
     presentPercentage = (1 - absenteepct * absentees) / present 
     absenteeCharge = (totalCost - overcharge) * absenteepct
     presentCharge = (totalCost - overcharge) * presentPercentage
@@ -116,7 +122,8 @@ for files in csvfiles:
             overcharge = overchargeParser(dayCosts, output, scaledAvgCost)
             ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge,
                                                                   absentees, present, absenteepct)
-            presentCharge += totalCost - absenteeCharge * absentees - presentCharge * (present - 1) - ocFinal # fix rounding errors
+            # fix rounding errors
+            presentCharge += totalCost - absenteeCharge * absentees - presentCharge * (present - 1) - ocFinal
             
             print("\nTotal: $%.2f" % (totalCost))
             print("Absentee Charge for %d absentees paying %.2f%%: $%.2f" % (absentees, absenteepct * 100, absenteeCharge))

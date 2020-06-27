@@ -1,4 +1,4 @@
-Parsing pge_electric_interval_data_2020-05-27_to_2020-06-30.csv...
+Parsing pge_electric_interval_data_2020-05-28_to_2020-07-01.csv...
 
 Name: JOHN DOE
 Address: 1600 PENNSYLVANIA AVE, WASHINGTON D.C. 20500
@@ -6,8 +6,7 @@ Account Number: 1234567890
 Service: 0987654321
 
 Daily Breakdown:
-Date: 2020-05-27, Daily Usage: 72.84kWh, Daily Cost: $18.84
-Date: 2020-05-28, Daily Usage: 66.86kWh, Daily Cost: $20.57
+Date: 2020-05-28, Daily Usage: 67.20kWh, Daily Cost: $20.68
 Date: 2020-05-29, Daily Usage: 44.39kWh, Daily Cost: $13.58
 Date: 2020-05-30, Daily Usage: 28.65kWh, Daily Cost: $8.86
 Date: 2020-05-31, Daily Usage: 29.36kWh, Daily Cost: $14.09
@@ -34,25 +33,27 @@ Date: 2020-06-20, Daily Usage: 16.39kWh, Daily Cost: $5.03
 Date: 2020-06-21, Daily Usage: 22.82kWh, Daily Cost: $6.97
 Date: 2020-06-22, Daily Usage: 45.39kWh, Daily Cost: $13.86
 Date: 2020-06-23, Daily Usage: 34.87kWh, Daily Cost: $10.70
-Date: 2020-06-24, Daily Usage: 0.00kWh, Daily Cost: $0.00
-Date: 2020-06-25, Daily Usage: 0.00kWh, Daily Cost: $0.00
+Date: 2020-06-24, Daily Usage: 32.26kWh, Daily Cost: $9.87
+Date: 2020-06-25, Daily Usage: 34.08kWh, Daily Cost: $10.42
 Date: 2020-06-26, Daily Usage: 0.00kWh, Daily Cost: $0.00
 Date: 2020-06-27, Daily Usage: 0.00kWh, Daily Cost: $0.00
 Date: 2020-06-28, Daily Usage: 0.00kWh, Daily Cost: $0.00
 Date: 2020-06-29, Daily Usage: 0.00kWh, Daily Cost: $0.00
-Total Cost: $271.93, Total Usage: 979.16kWh, Avg Cost/day: $6.69, Scaled Avg: $5.18
+Total Cost: $273.53, Total Usage: 973.16kWh, Avg Cost/day: $7.39, Scaled Avg: $5.72
 
 Overcharges:
-2020-06-13: Overcharge: $1.81
-2020-06-14: Overcharge: $1.22
-2020-06-18: Overcharge: $0.93
-2020-06-19: Overcharge: $0.84
-2020-06-21: Overcharge: $1.79
-2020-06-22: Overcharge: $8.68
-2020-06-23: Overcharge: $5.52
-Total Overcharge: $20.82
+2020-06-13: Overcharge: $1.27
+2020-06-14: Overcharge: $0.68
+2020-06-18: Overcharge: $0.39
+2020-06-19: Overcharge: $0.30
+2020-06-21: Overcharge: $1.25
+2020-06-22: Overcharge: $8.14
+2020-06-23: Overcharge: $4.98
+2020-06-24: Overcharge: $4.15
+2020-06-25: Overcharge: $4.70
+Total Overcharge: $25.88
 
-Total: $271.93
-Absentee Charge for 3 absentees paying 10.00%: $25.11
-Present Charge for 3 present: $58.59
-Present with Overcharge: $79.41
+Total: $273.53
+Absentee Charge for 3 absentees paying 10.00%: $24.76
+Present Charge for 3 present: $57.78
+Present with Overcharge: $83.67
