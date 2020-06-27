@@ -73,7 +73,7 @@ def costParser(csvfile, output, dayCosts):
             
     print("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f"
           % (totalCost, totalUsage, units, majorityMonthCost / days))
-    output.write("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f"
+    output.write("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f\n"
                  % (totalCost, totalUsage, units, majorityMonthCost / days))
     return majorityMonthCost / days, totalCost
 
