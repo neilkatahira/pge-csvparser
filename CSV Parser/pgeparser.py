@@ -22,13 +22,24 @@ def pctInputChecker(msg):
             print("Enter a valid percentage between 0 and 1")
     return val
 
+# Checks input for a positive floating value
+def floatInputChecker(msg):
+    validVal = False
+    while not validVal:
+        val = float(input(msg))
+        if val >= 0:
+            validVal = True
+        else:
+            print("Enter a valid positive floating number")
+    return val
+
 # Print first 4 lines of csv file as customer details
 def customerDetails(csvfile, output):
     custDetails = csv.reader(csvfile)
     for i in range(4):
         custLine = next(custDetails)
-        print("%s: %s" % (custLine[0], custLine[1]))
-        output.write("%s: %s\n" % (custLine[0], custLine[1]))
+        print(f"{custLine[0]}: {custLine[1]}")
+        output.write(f"{custLine[0]}: {custLine[1]}\n")
     next(csvfile) # skip line between customer details and costs
 
 # Parse csv file tallying daily and total costs
@@ -38,14 +49,13 @@ def costParser(csvfile, output, dayCosts):
     totalCost = totalUsage = currentCost = currentUsage = majorityMonthCost = 0.0
     days = 0
     majorityMonthEnable = False
+    scalingFactor = 0.24 / 0.31 # tier 1 PGE to tier 2 PGE
 
     print("\nDaily Breakdown:")
     output.write("\nDaily Breakdown:\n")
     for line in costs:
         totalCost += float(line["COST"].replace('$', ''))
         totalUsage += float(line["USAGE"])
-        if majorityMonthEnable:
-            majorityMonthCost
         if units == "":
             units = line["UNITS"]
         if currentDate == "":
@@ -54,10 +64,8 @@ def costParser(csvfile, output, dayCosts):
             currentUsage += float(line["USAGE"])
             currentCost += float(line["COST"].replace('$', ''))
         else:
-            print("Date: %s, Daily Usage: %.2f%s, Daily Cost: $%.2f"  %
-                  (currentDate, currentUsage, units, currentCost))
-            output.write("Date: %s, Daily Usage: %.2f%s, Daily Cost: $%.2f\n"  %
-                  (currentDate, currentUsage, units, currentCost))
+            print(f"Date: {currentDate}, Daily Usage: {currentUsage:.2f}{units}, Daily Cost: ${currentCost:.2f}")
+            output.write(f"Date: {currentDate}, Daily Usage: {currentUsage:.2f}{units}, Daily Cost: ${currentCost:.2f}\n")
             dayCosts[currentDate] = dict({'Usage': currentUsage, 'Cost': currentCost, 'Units': units})
             # start day count at beginning of month
             if currentDate.split('-')[2] == "01": 
@@ -69,11 +77,14 @@ def costParser(csvfile, output, dayCosts):
                 majorityMonthCost += currentCost
             currentCost = currentUnits = currentUsage = extPay = 0.0
 
-    avg = majorityMonthCost / days
-    print("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f"
-          % (totalCost, totalUsage, units, avg))
-    output.write("Total Cost: $%.2f, Total Usage: %.2f%s, Avg Cost/day: $%.2f\n"
-                 % (totalCost, totalUsage, units, avg))
+    # process last date of file
+    print(f"Date: {currentDate}, Daily Usage: {currentUsage:.2f}{units}, Daily Cost: ${currentCost:.2f}")
+    output.write(f"Date: {currentDate}, Daily Usage: {currentUsage:.2f}{units}, Daily Cost: ${currentCost:.2f}\n")
+    dayCosts[currentDate] = dict({'Usage': currentUsage, 'Cost': currentCost, 'Units': units})
+
+    avg = scalingFactor * majorityMonthCost / days
+    print(f"Total Cost: {totalCost:.2f}, Total Usage: {totalUsage:.2f}{units}, Scaled Avg Cost/day: ${avg:.2f}")
+    output.write(f"Total Cost: {totalCost:.2f}, Total Usage: {totalUsage:.2f}{units}, Scaled Avg Cost/day: ${avg:.2f}\n")
     return avg, totalCost
 
 # Calculate overcharge based on average for A/C usage
@@ -83,19 +94,19 @@ def overchargeParser(dayCosts, output, avgCost):
     totalOvercharge = 0.0
     majorityMonthEnable = False
     for days in dayCosts:
-        if days.split('-')[2] == "13": #general hard code for after finals, set to 01 otherwise
+        if days.split('-')[2] == "01": # change day to start counting overcharges
             majorityMonthEnable = True
         if majorityMonthEnable:
             if dayCosts[days]['Cost'] > avgCost:
                 totalOvercharge += dayCosts[days]['Cost'] - avgCost
-                print("%s: Overcharge: $%.2f" % (days, dayCosts[days]['Cost'] - avgCost))
-                output.write("%s: Overcharge: $%.2f\n" % (days, dayCosts[days]['Cost'] - avgCost))
-    print("Total Overcharge: $%.2f" % (totalOvercharge))
-    output.write("Total Overcharge: $%.2f\n" % (totalOvercharge))
+                print(f"{days}: Overcharge: ${(dayCosts[days]['Cost'] - avgCost):.2f}")
+                output.write(f"{days}: Overcharge: ${(dayCosts[days]['Cost'] - avgCost):.2f}\n")
+    print(f"Total Overcharge: ${totalOvercharge:.2f}")
+    output.write(f"Total Overcharge: ${totalOvercharge:.2f}\n")
     return totalOvercharge
 
 # Calculate final payments
-def finalCharges(totalCost, overcharge, absentees, present, absenteepct):
+def finalCharges(totalCost, overcharge, absentees, present, absenteepct, adjustments):
     presentPercentage = (1 - absenteepct * absentees) / present 
     absenteeCharge = (totalCost - overcharge) * absenteepct
     presentCharge = (totalCost - overcharge) * presentPercentage
@@ -105,29 +116,34 @@ def finalCharges(totalCost, overcharge, absentees, present, absenteepct):
 absentees = personInputChecker("Number of people not in apartment: ")
 present = personInputChecker("Number of people currently in apartment: ")
 absenteepct = pctInputChecker("Percentage of bill each absentee pays (6 people pays 0.167 of bill): ")
+adjustments = floatInputChecker("PGE Adjustments: ")
 csvfiles = glob.glob('*.csv')
 
 for files in csvfiles:
     with open(files, 'r', encoding='utf-8-sig') as csvfile, open("pgeoutput_%s.txt" % (os.path.splitext(files)[0]), 'w') as output:
-        print("Parsing %s...\n" % (files))
-        output.write("Parsing %s...\n\n" % (files))
+        print(f'Parsing {files}...\n')
+        output.write(f'Parsing {files}...\n\n')
 
         dayCosts = {}
         customerDetails(csvfile, output)
         AvgCost, totalCost = costParser(csvfile, output, dayCosts)
+        totalCost = totalCost - adjustments
         overcharge = overchargeParser(dayCosts, output, AvgCost)
-        ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge, absentees, present, absenteepct)
+
+        print(f"\nAdjustments: ${adjustments:.2f}")
+        output.write(f"\nAdjustments: ${adjustments:.2f}\n")
+        ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge, absentees, present, absenteepct, adjustments)
         # fix rounding errors
         presentCharge += totalCost - absenteeCharge * absentees - presentCharge * (present - 1) - ocFinal
         
-        print("\nTotal: $%.2f" % (totalCost))
-        print("Absentee Charge for %d absentees paying %.2f%%: $%.2f" % (absentees, absenteepct * 100, absenteeCharge))
-        print("Present Charge for %d present: $%.2f" % (present, presentCharge))
-        print("Present with Overcharge: $%.2f" % (ocFinal))
-        print("\nSession exported to pgeoutput_%s.txt" % (os.path.splitext(files))[0])
-        output.write("\nTotal: $%.2f\n" % (totalCost))
-        output.write("Absentee Charge for %d absentees paying %.2f%%: $%.2f\n" % (absentees, absenteepct * 100, absenteeCharge))
-        output.write("Present Charge for %d present: $%.2f\n" % (present, presentCharge))
-        output.write("Present with Overcharge: $%.2f\n" % (ocFinal))
+        print(f"\nTotal: ${totalCost:.2f}")
+        print(f"Absentee Charge for {absentees} absentees paying {(absenteepct * 100):.2f}%: ${absenteeCharge:.2f}")
+        print(f"Present Charge for {present} present: ${presentCharge:.2f}")
+        print(f"Present with Overcharge: ${ocFinal:.2f}")
+        print(f"\nSession exported to pgeoutput_{os.path.splitext(files)[0]}.txt")
+        output.write(f"\nTotal: ${totalCost:.2f}\n")
+        output.write(f"Absentee Charge for {absentees} absentees paying {(absenteepct * 100):.2f}%: ${absenteeCharge:.2f}\n")
+        output.write(f"Present Charge for {present} present: ${presentCharge:.2f}\n")
+        output.write(f"Present with Overcharge: ${ocFinal:.2f}\n")
         
 r = input("Press enter to exit...\n")
