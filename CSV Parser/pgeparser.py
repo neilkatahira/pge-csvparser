@@ -23,14 +23,14 @@ def pctInputChecker(msg):
     return val
 
 # Checks input for a positive floating value
-def floatInputChecker(msg):
+def realInputChecker(msg):
     validVal = False
     while not validVal:
         val = float(input(msg))
-        if val >= 0:
+        if isinstance(val, float) or val.is_integer():
             validVal = True
         else:
-            print("Enter a valid positive floating number")
+            print("Enter a valid real number")
     return val
 
 # Print first 4 lines of csv file as customer details
@@ -113,37 +113,41 @@ def finalCharges(totalCost, overcharge, absentees, present, absenteepct, adjustm
     overchargeFinal = overcharge + presentCharge
     return overchargeFinal, absenteeCharge, presentCharge
 
-absentees = personInputChecker("Number of people not in apartment: ")
-present = personInputChecker("Number of people currently in apartment: ")
-absenteepct = pctInputChecker("Percentage of bill each absentee pays (6 people pays 0.167 of bill): ")
-adjustments = floatInputChecker("PGE Adjustments: ")
-csvfiles = glob.glob('*.csv')
+def main():
+    absentees = personInputChecker("Number of people not in apartment: ")
+    present = personInputChecker("Number of people currently in apartment: ")
+    absenteepct = pctInputChecker("Percentage of bill each absentee pays (6 people pays 0.167 of bill): ")
+    adjustments = realInputChecker("PGE Adjustments: ")
+    csvfiles = glob.glob('*.csv')
 
-for files in csvfiles:
-    with open(files, 'r', encoding='utf-8-sig') as csvfile, open("pgeoutput_%s.txt" % (os.path.splitext(files)[0]), 'w') as output:
-        print(f'Parsing {files}...\n')
-        output.write(f'Parsing {files}...\n\n')
+    for files in csvfiles:
+        with open(files, 'r', encoding='utf-8-sig') as csvfile, open("pgeoutput_%s.txt" % (os.path.splitext(files)[0]), 'w') as output:
+            print(f'Parsing {files}...\n')
+            output.write(f'Parsing {files}...\n\n')
 
-        dayCosts = {}
-        customerDetails(csvfile, output)
-        AvgCost, totalCost = costParser(csvfile, output, dayCosts)
-        totalCost = totalCost - adjustments
-        overcharge = overchargeParser(dayCosts, output, AvgCost)
+            dayCosts = {}
+            customerDetails(csvfile, output)
+            AvgCost, totalCost = costParser(csvfile, output, dayCosts)
+            totalCost = totalCost - adjustments
+            overcharge = overchargeParser(dayCosts, output, AvgCost)
 
-        print(f"\nAdjustments: ${adjustments:.2f}")
-        output.write(f"\nAdjustments: ${adjustments:.2f}\n")
-        ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge, absentees, present, absenteepct, adjustments)
-        # fix rounding errors
-        presentCharge += totalCost - absenteeCharge * absentees - presentCharge * (present - 1) - ocFinal
-        
-        print(f"\nTotal: ${totalCost:.2f}")
-        print(f"Absentee Charge for {absentees} absentees paying {(absenteepct * 100):.2f}%: ${absenteeCharge:.2f}")
-        print(f"Present Charge for {present} present: ${presentCharge:.2f}")
-        print(f"Present with Overcharge: ${ocFinal:.2f}")
-        print(f"\nSession exported to pgeoutput_{os.path.splitext(files)[0]}.txt")
-        output.write(f"\nTotal: ${totalCost:.2f}\n")
-        output.write(f"Absentee Charge for {absentees} absentees paying {(absenteepct * 100):.2f}%: ${absenteeCharge:.2f}\n")
-        output.write(f"Present Charge for {present} present: ${presentCharge:.2f}\n")
-        output.write(f"Present with Overcharge: ${ocFinal:.2f}\n")
-        
-r = input("Press enter to exit...\n")
+            print(f"\nAdjustments: ${adjustments:.2f}")
+            output.write(f"\nAdjustments: ${adjustments:.2f}\n")
+            ocFinal, absenteeCharge, presentCharge = finalCharges(totalCost, overcharge, absentees, present, absenteepct, adjustments)
+            # fix rounding errors
+            presentCharge += totalCost - absenteeCharge * absentees - presentCharge * (present - 1) - ocFinal
+            
+            print(f"\nTotal: ${totalCost:.2f}")
+            print(f"Absentee Charge for {absentees} absentees paying {(absenteepct * 100):.2f}%: ${absenteeCharge:.2f}")
+            print(f"Present Charge for {present} present: ${presentCharge:.2f}")
+            print(f"Present with Overcharge: ${ocFinal:.2f}")
+            print(f"\nSession exported to pgeoutput_{os.path.splitext(files)[0]}.txt")
+            output.write(f"\nTotal: ${totalCost:.2f}\n")
+            output.write(f"Absentee Charge for {absentees} absentees paying {(absenteepct * 100):.2f}%: ${absenteeCharge:.2f}\n")
+            output.write(f"Present Charge for {present} present: ${presentCharge:.2f}\n")
+            output.write(f"Present with Overcharge: ${ocFinal:.2f}\n")
+            
+    r = input("Press enter to exit...\n")
+
+if __name__ == "__main__":
+    main()
